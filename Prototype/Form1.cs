@@ -18,7 +18,7 @@ namespace Prototype
         facebookUsers[] fbUsers = new facebookUsers[0]; facebookFriends[] fbFriends = new facebookFriends[0]; mList[] fbmList = new mList[0];
         messages[] fbMessages = new messages[0]; universities[] fbUni = new universities[0]; workplace[] fbWork = new workplace[0];
 
-
+        // Code for connecting to the database
         string connectionString = "SERVER=" + dbConnect.SERVER + ";" +
             "DATABASE=" + dbConnect.DATABASE_NAME + ";" + "UID=" +
             dbConnect.USER_NAME + ";" + "PASSWORD=" +
@@ -27,6 +27,7 @@ namespace Prototype
 
         public Form1()
         {
+            // Calling each method
             InitializeComponent();
             dbConnectandPopulate();
             getUnis();
@@ -39,6 +40,7 @@ namespace Prototype
         {
             using (MySqlConnection connection = new MySqlConnection(connectionString))
             {
+                // Code for calling the table data
                 string query = "SELECT * FROM isad157_jharrison.messages_list";
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 connection.Open();
@@ -47,6 +49,7 @@ namespace Prototype
                 sqlDA.Fill(facebookmListTable);
                 int endOfRecord = facebookmListTable.Rows.Count;
 
+                // Declaring each variable before being used
                 int senderID = 0000; int messageID = 0000; int count = 0;
 
                 foreach (DataRow row in facebookmListTable.Rows)
@@ -198,11 +201,12 @@ namespace Prototype
             getFBUser(selectedFBUser);
         }
 
-        private void getFBUser(string userIDF)
+        private void getFBUser(string userIDF) // Calling currently selected User ID for reference
         {
             
             if (userIDF != "Prototype.facebookUsers")
             {
+                // Emptying boxes and lists in case any info isn't updated
                 lbUserInfoName.Text = " ";
                 lbUserInfoGender.Text = " ";
                 lbUserInfoHometown.Text = " ";
@@ -211,24 +215,28 @@ namespace Prototype
                 lstUserFriends.Items.Clear();
                 lstUserMessages.Items.Clear();
 
+                // User info being called
                 facebookUsers selectedfbuser = fbUsers.FirstOrDefault(i => i.identifier == userIDF);
                 lbUserInfoName.Text = selectedfbuser.getFirstName() + " " + selectedfbuser.getLastName();
                 lbUserInfoGender.Text = selectedfbuser.getGender();
                 lbUserInfoCity.Text = selectedfbuser.getCity();
                 lbUserInfoHometown.Text = selectedfbuser.getHometown();
 
+                // User uni being called
                 universities tempuni = fbUni.FirstOrDefault(u => u.identifier == userIDF.ToString());
                 if (tempuni.uniName != " ")
                 {
                     lbUserInfoUni.Text = tempuni.uniName;
                 }
 
+                // User work place being called
                 workplace tempwork = fbWork.FirstOrDefault(w => w.identifier == userIDF.ToString());
                 if (tempwork.workName != " ")
                 {
                     lbUserInfoWork.Text = tempwork.workName;
                 }
 
+                // Message list being called before calling messages
                 mList tempList = fbmList.FirstOrDefault(l => l.identifier2 == userIDF.ToString());
                 if (tempList.identifier2 == null)
                 {
@@ -236,6 +244,7 @@ namespace Prototype
                 }
                 else
                 {
+                    // Putting each identifier in string
                     string messID = tempList.identifier2;
                     string uID = tempList.identifier;
                     string combo = tempList.identifier3;
@@ -251,6 +260,7 @@ namespace Prototype
 
                             foreach (DataRow row in facebookUserMessTable.Rows)
                             {
+                                // User Messages being called
                                 messages tempmessages = fbMessages.FirstOrDefault(m => m.identifier == messID.ToString());
                                 lstUserMessages.Items.Add(tempmessages.getsetRecipient);
                                 lstUserMessages.Items.Add(tempmessages.getsetDateTime);
@@ -278,6 +288,7 @@ namespace Prototype
                         fbID1 = (int)row["UserID"];
                         fbID2 = (int)row["UserID_2"];
 
+                        // User Friends being called
                         facebookUsers tempfbuser = fbUsers.FirstOrDefault(i => i.identifier == fbID2.ToString());
                         string fbfName = tempfbuser.displayFormat;
                         lstUserFriends.Items.Add(fbfName);
